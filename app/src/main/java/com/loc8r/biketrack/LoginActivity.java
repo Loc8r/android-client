@@ -44,6 +44,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //TODO potential error with logging to google account
+
         FirebaseApp.initializeApp(this);
         mAuth = FirebaseAuth.getInstance();
 
@@ -97,11 +99,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
 
-
                             //TODO get firebase data if user is in system
-                            getFirebaseData(mDatabaseReference.child("user"));
-
-
+                            getFirebaseData(mDatabaseReference);
 
                         } else {
                            //TODO if no account set up then tell person to add an account
@@ -115,22 +114,23 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean userExists(DataSnapshot snapshot) {
 
-        for (int x = 0; x > snapshot.getChildrenCount() - 1; x++) {
+
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             String checkedEmail = user.getEmail();
             Iterator<DataSnapshot> it = snapshot.getChildren().iterator();
             while (it.hasNext()) {
                 DataSnapshot child = it.next();
                 //TODO fix line below.
-                String inputEmail = (String) child.getValue();
+                User newUser = (User) child.getValue();
+                String inputEmail = newUser.getAcctEmail();
 
                 if (checkedEmail.equals(inputEmail)) {
                     mUser = child;
                     return true;
                 }
-            }
+
             return false;
-        }
+            }
 
         return false;
     }
@@ -146,6 +146,8 @@ public class LoginActivity extends AppCompatActivity {
                     goToMaps(location);
                 } else {
                     //TODO make person register the bike SIM with firebase
+                    Intent intent = new Intent(LoginActivity.this, SignUpUser.class);
+                    startActivity(intent);
                 }
 
             }

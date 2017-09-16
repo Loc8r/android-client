@@ -2,6 +2,8 @@
     <string name="app_name">BikeTrack</string>
     <string name="username">Email</string>
     <string name="password">Password</string>
+    <string name="register">Register</string>
+    <string name="phone_number">Phone Number</string>
     <string name="title_activity_maps">Map</string>
     <string name="server_client_id">338672131062-f1rn3mid1ot6pd9ac54c2lrug6262j1i.apps.googleusercontent.com</string>
 </resources>

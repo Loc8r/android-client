@@ -1,0 +1,86 @@
+{
+  "project_info": {
+    "project_number": "338672131062",
+    "firebase_url": "https://biketrack-41c8e.firebaseio.com",
+    "project_id": "biketrack-41c8e",
+    "storage_bucket": "biketrack-41c8e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338672131062:android:601689c661611325",
+        "android_client_info": {
+          "package_name": "com.loc8r.biketrackserver"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338672131062-mfqdncouk3dmv6ail9b3qfn4rvn05t0u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.loc8r.biketrackserver",
+            "certificate_hash": "e6d8dbe18beb6835c38a8f757569bd604622f2a1"
+          }
+        },
+        {
+          "client_id": "338672131062-f1rn3mid1ot6pd9ac54c2lrug6262j1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOvInHIr5CEj98t8lr-No8Ywjia-Gt_C4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338672131062-f1rn3mid1ot6pd9ac54c2lrug6262j1i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338672131062:android:b795bd988fe75eef",
+        "android_client_info": {
+          "package_name": "com.loc8r.biketrack"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338672131062-f1rn3mid1ot6pd9ac54c2lrug6262j1i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOvInHIr5CEj98t8lr-No8Ywjia-Gt_C4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

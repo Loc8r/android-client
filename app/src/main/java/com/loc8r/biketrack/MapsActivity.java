@@ -1,5 +1,6 @@
 package com.loc8r.biketrack;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
@@ -14,6 +15,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private LatLng mCurrentLocation;
+    private double mLatitude;
+    private double mLongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Intent myIntent = getIntent();
+        mLatitude = myIntent.getDoubleExtra("latitude", -34.0);
+        mLongitude = myIntent.getDoubleExtra("longitude", 151.0);
 
     }
 
@@ -41,8 +47,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        // Add a marker in Sydney and move the camera
-        mCurrentLocation = new LatLng(-34, 151);
+        // Add a marker to Location and move the camera
+        mCurrentLocation = new LatLng(mLatitude, mLongitude);
         mMap.addMarker(new MarkerOptions().position(mCurrentLocation).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mCurrentLocation));
     }

@@ -37,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
     GoogleApiClient mgac;
     GoogleSignInAccount mgsa;
     DatabaseReference mDatabaseReference;
-
+    DataSnapshot mUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,12 +121,16 @@ public class LoginActivity extends AppCompatActivity {
             Iterator<DataSnapshot> it = snapshot.getChildren().iterator();
             while (it.hasNext()) {
                 DataSnapshot child = it.next();
-                //
+                //TODO fix line below.
+                String inputEmail = (String) child.getValue();
+
+                if (checkedEmail.equals(inputEmail)) {
+                    mUser = child;
+                    return true;
+                }
             }
-            String inputEmail;
-
+            return false;
         }
-
 
         return false;
     }
@@ -138,9 +142,10 @@ public class LoginActivity extends AppCompatActivity {
                 //TODO get the location of the specific user and package it as an intent to MapsActivity
 
                 if (userExists(dataSnapshot)) {
-                    DataSnapshot dataSnapshot1 = dataSnapshot.child("User1");
-                    LatLng location = (LatLng) dataSnapshot1.child("latlng").getValue();
+                    LatLng location = (LatLng) mUser.child("latlng").getValue();
                     goToMaps(location);
+                } else {
+                    //TODO make person register the bike SIM with firebase
                 }
 
             }

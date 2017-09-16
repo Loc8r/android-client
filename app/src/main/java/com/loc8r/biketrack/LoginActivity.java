@@ -13,6 +13,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -21,6 +22,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,6 +36,8 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     GoogleApiClient mgac;
     GoogleSignInAccount mgsa;
+    DatabaseReference mDatabaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     public void loginWithGoogle(View v) {
@@ -86,14 +96,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
 
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            goToMaps();
+
+                            //TODO get firebase data if user is in system
+                            getFirebaseData(mDatabaseReference.child("user"));
+
+
 
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Sign in failed.",
+                           //TODO if no account set up then tell person to add an account
+                            Toast.makeText(LoginActivity.this, "Sorry! Something went wrong! Try again!",
                                     Toast.LENGTH_SHORT).show();
                         }
 
@@ -101,12 +113,52 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void getFirebaseData() {
+    private boolean userExists(DataSnapshot snapshot) {
 
+        for (int x = 0; x > snapshot.getChildrenCount() - 1; x++) {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String checkedEmail = user.getEmail();
+            Iterator<DataSnapshot> it = snapshot.getChildren().iterator();
+            while (it.hasNext()) {
+                DataSnapshot child = it.next();
+                //
+            }
+            String inputEmail;
+
+        }
+
+
+        return false;
     }
 
-    private void goToMaps() {
+    private void getFirebaseData(DatabaseReference ref) {
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                //TODO get the location of the specific user and package it as an intent to MapsActivity
+
+                if (userExists(dataSnapshot)) {
+                    DataSnapshot dataSnapshot1 = dataSnapshot.child("User1");
+                    LatLng location = (LatLng) dataSnapshot1.child("latlng").getValue();
+                    goToMaps(location);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void goToMaps(LatLng location) {
+
         Intent intent = new Intent(this, MapsActivity.class);
+        double lat = location.latitude;
+        double lon = location.longitude;
+        intent.putExtra("latitude", lat);
+        intent.putExtra("longitude", lon);
         startActivity(intent);
     }
 }

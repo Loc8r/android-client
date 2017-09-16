@@ -27,45 +27,4 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/linesep"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <EditText
-        android:id="@+id/usernameLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="@string/username"
-        android:textColor="#ffffff"/>
-
-    <EditText
-        android:id="@+id/passwordLogin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPassword"
-        android:text="@string/password"
-        android:textColor="#ffffff"/>
-
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <Button
-        android:id="@+id/login2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/signinbutton2"
-        android:onClick="loginWithEmail"/>
-
 </android.widget.LinearLayout>

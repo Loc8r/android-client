@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -17,7 +15,6 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,11 +37,11 @@ public class LoginActivity extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
-       mgac = new GoogleApiClient.Builder(this)
+        mgac = new GoogleApiClient.Builder(this)
                 .enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(LoginActivity.this, "Error! Login failed! Please Try Again!", Toast.LENGTH_SHORT)
+                        Toast.makeText(LoginActivity.this, "Oops! Something went wrong. Please restart program", Toast.LENGTH_SHORT)
                                 .show();
                     }
                 })
@@ -52,9 +49,6 @@ public class LoginActivity extends AppCompatActivity {
                 .build();
 
 
-//        FirebaseApp.initializeApp(this);
-//        mAuth = FirebaseAuth.getInstance();
-//        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     public void loginWithGoogle(View v) {
@@ -73,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
     private void handleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
             mgsa = result.getSignInAccount();
-           authenticateFirebaseUser(mgsa);
+            authenticateFirebaseUser(mgsa);
         } else {
             Toast.makeText(this, "Sign in failed!", Toast.LENGTH_SHORT).show();
         }
@@ -94,7 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.",
+                            Toast.makeText(LoginActivity.this, "Sign in failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
 

@@ -5,28 +5,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.loc8r.biketrack.SignUpUser"
-    android:orientation="vertical">
+    android:background="@drawable/bg"
+    android:orientation="vertical"
+    tools:context="com.loc8r.biketrack.SignUpUser">
 
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"/>
+        android:layout_weight="4"
+        android:backgroundTint="@android:color/transparent"/>
 
     <EditText
         android:id="@+id/phoneNumber"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:ems="10"
         android:inputType="phone"
         android:text="@string/phone_number"
-        android:layout_weight="1"/>
+        android:textColor="#ffffff"/>
 
     <Button
         android:id="@+id/registerButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/register"
         android:layout_weight="0.2"
-        android:onClick="registerUser"/>
+        android:backgroundTint="@color/colorAccent"
+        android:onClick="registerUser"
+        android:text="@string/register"/>
 </android.widget.LinearLayout>

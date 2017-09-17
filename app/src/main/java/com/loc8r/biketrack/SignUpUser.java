@@ -1,6 +1,8 @@
 package com.loc8r.biketrack;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,32 +29,12 @@ public class SignUpUser extends AppCompatActivity {
     }
 
     public void registerUser (View v) {
-
         String phoneNumber = mPhoneNumber.getText().toString();
-        if (phoneNumber.length() == 10) {
-            updateToFirebase(makeUser(phoneNumber));
-        } else {
-            Toast.makeText(this, "This is an invalid phone number. Try again!", Toast.LENGTH_SHORT)
-                    .show();
-        }
-
-
-    }
-
-    private User makeUser(String s) {
-        User newUser = new User();
-        newUser.setUniqueID(s);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        newUser.setAcctEmail(user.getEmail());
-        return newUser;
-    }
-
-    private void updateToFirebase(User user) {
-        //TODO make this consistent with the rest of the LoginActivity Code. users is document store.
-        mDatabaseReference.child("users").child(String.valueOf(mPhoneNumber))
-                .setValue(user);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPreferences.edit().putString("phone_number", phoneNumber).apply();
         returnToLogin();
     }
+
 
     private void returnToLogin() {
         Toast.makeText(this, "New Account Made!", Toast.LENGTH_SHORT).show();

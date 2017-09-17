@@ -1,7 +1,9 @@
 package com.loc8r.biketrack;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -37,22 +39,23 @@ public class LoginActivity extends AppCompatActivity {
 	GoogleApiClient mgac;
 	GoogleSignInAccount mgsa;
 	DatabaseReference mDatabaseReference;
-	DataSnapshot mUser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
-		//TODO potential error with logging to google account
-
 		FirebaseApp.initializeApp(this);
 		mAuth = FirebaseAuth.getInstance();
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+		String phoneNumber = prefs.getString("phone_number", "111111111");
 
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
 				.requestIdToken(getString(R.string.server_client_id))
 				.build();
+
 
 		mgac = new GoogleApiClient.Builder(this)
 				.enableAutoManage(this /* FragmentActivity */, new GoogleApiClient.OnConnectionFailedListener() {
@@ -65,7 +68,18 @@ public class LoginActivity extends AppCompatActivity {
 				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
 				.build();
 
-		mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+		//Database reference points to a specific user in list of users
+		mDatabaseReference = FirebaseDatabase
+				.getInstance()
+				.getReference()
+				.child(phoneNumber);
+
+		//if user is already logged in, then immediately call getFirebaseData
+		FirebaseUser user = mAuth.getCurrentUser();
+		if (user != null) {
+			getFirebaseData(mDatabaseReference);
+		}
+
 	}
 
 	public void loginWithGoogle(View v) {
@@ -76,7 +90,6 @@ public class LoginActivity extends AppCompatActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		//TODO figure out why signin result fails!
 		GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
 		handleSignInResult(result);
 	}
@@ -98,12 +111,9 @@ public class LoginActivity extends AppCompatActivity {
 					@Override
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {
-
-							//TODO get firebase data if user is in system
 							getFirebaseData(mDatabaseReference);
 
 						} else {
-							//TODO if no account set up then tell person to add an account
 							Toast.makeText(LoginActivity.this, "Sorry! Something went wrong! Try again!",
 									Toast.LENGTH_SHORT).show();
 						}
@@ -112,42 +122,17 @@ public class LoginActivity extends AppCompatActivity {
 				});
 	}
 
-	private boolean userExists(DataSnapshot snapshot) {
-
-		FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-		String checkedEmail = user.getEmail();
-		Iterator<DataSnapshot> it = snapshot.getChildren().iterator();
-		while (it.hasNext()) {
-			DataSnapshot child = it.next();
-			//TODO fix line below.
-			User newUser = (User) child.getValue();
-			String inputEmail = newUser.getAcctEmail();
-
-			if (checkedEmail.equals(inputEmail)) {
-				mUser = child;
-				return true;
-			}
-
-			return false;
-		}
-
-		return false;
-	}
 
 	private void getFirebaseData(DatabaseReference ref) {
 		ref.addValueEventListener(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
-				//TODO get the location of the specific user and package it as an intent to MapsActivity
 
-				if (userExists(dataSnapshot)) {
-					LatLng location = (LatLng) mUser.child("latlng").getValue();
-					goToMaps(location);
-				} else {
-					//TODO make person register the bike SIM with firebase
-					Intent intent = new Intent(LoginActivity.this, SignUpUser.class);
-					startActivity(intent);
-				}
+
+				//TODO work with the snapshot (hashmap) and get last location
+				//TODO call goToMaps
+
+
 
 			}
 

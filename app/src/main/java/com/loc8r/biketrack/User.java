@@ -3,37 +3,20 @@ package com.loc8r.biketrack;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * Created by mickeydang on 2017-09-16.
  */
 
 public class User {
-    private String mAcctEmail;
-    private String mUniqueID;
-    private ArrayList<LatLng> mLatLngList;
+    private Map<String,LatLng> locationHistory;
 
-    public String getAcctEmail() {
-        return mAcctEmail;
+    public Map<String, LatLng> getLocationHistory() {
+        return locationHistory;
     }
 
-    public void setAcctEmail(String acctEmail) {
-        mAcctEmail = acctEmail;
-    }
-
-    public String getUniqueID() {
-        return mUniqueID;
-    }
-
-    public void setUniqueID(String uniqueID) {
-        mUniqueID = uniqueID;
-    }
-
-    public ArrayList<LatLng> getLatLng() {
-        return mLatLngList;
-    }
-
-    public void setLatLng(ArrayList<LatLng> latLng) {
-        mLatLngList = latLng;
+    public void setLocationHistory(Map<String, LatLng> locationHistory) {
+        this.locationHistory = locationHistory;
     }
 }

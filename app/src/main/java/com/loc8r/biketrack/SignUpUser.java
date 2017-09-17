@@ -46,7 +46,9 @@ public class SignUpUser extends AppCompatActivity {
     }
 
     private void updateToFirebase (String phoneNumber) {
-        
+        FirebaseDatabase.getInstance().getReference().child("users")
+                .push()
+                .setValue(phoneNumber);
     }
 
     private void returnToLogin() {

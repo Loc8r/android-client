@@ -29,6 +29,22 @@
             android:onClick="loginWithGoogle"/>
     </RelativeLayout>
 
+    <EditText
+        android:id="@+id/phone_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Bike phone number"
+        android:inputType="phone"
+        android:visibility="gone"/>
+
+    <Button
+        android:id="@+id/submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:text="Submit"/>
+
     <Space
         android:layout_width="match_parent"
         android:layout_height="0dp"

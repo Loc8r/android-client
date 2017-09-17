@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.auth.api.Auth;
@@ -29,33 +31,54 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-
-import java.util.Iterator;
 
 
 public class LoginActivity extends AppCompatActivity {
 
+	SharedPreferences prefs;
 	FirebaseAuth mAuth;
 	GoogleApiClient mgac;
 	GoogleSignInAccount mgsa;
 	DatabaseReference mDatabaseReference;
     String mPhoneNumber;
     SignInButton mSignInButton;
+    EditText mPhoneEdit;
+    Button mSubmitButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 
+		prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+
 		FirebaseApp.initializeApp(this);
 		mAuth = FirebaseAuth.getInstance();
 
 		mSignInButton = (SignInButton) findViewById(R.id.login);
 		mSignInButton.setSize(SignInButton.SIZE_WIDE);
+		mPhoneEdit = (EditText) findViewById(R.id.phone_edit);
+		mSubmitButton = (Button) findViewById(R.id.submit);
+
+		mSubmitButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				// TODO: 2017-09-17 SET NUMBER
+			}
+		});
+
+		//if user is already logged in, then immediately call getFirebaseData
+		FirebaseUser user = mAuth.getCurrentUser();
+		if (user == null) {
+			mPhoneEdit.setVisibility(View.VISIBLE);
+			mSignInButton.setVisibility(View.GONE);
+		} else {
+			viewLastLocation();
+		}
 
 		//gets sharedprefs.
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
 		mPhoneNumber = prefs.getString("phone_number", "111111111");
 
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -81,12 +104,25 @@ public class LoginActivity extends AppCompatActivity {
 				.getReference()
 				.child(mPhoneNumber);
 
-		//if user is already logged in, then immediately call getFirebaseData
-		FirebaseUser user = mAuth.getCurrentUser();
-		if (user != null) {
-			getFirebaseData(mDatabaseReference);
-		}
+	}
 
+	private void viewLastLocation() {
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(mPhoneNumber).child("locationHistory");
+		Query lastLocationQuery = ref.orderByKey().limitToLast(1);
+		lastLocationQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+			@Override
+			public void onDataChange(DataSnapshot dataSnapshot) {
+				LatLng latLng = new LatLng(
+						Double.parseDouble(dataSnapshot.child("lat").getValue().toString()),
+						Double.parseDouble(dataSnapshot.child("lon").getValue().toString()));
+				goToMaps(latLng);
+			}
+
+			@Override
+			public void onCancelled(DatabaseError databaseError) {
+
+			}
+		});
 	}
 
 	public void loginWithGoogle(View v) {

@@ -41,7 +41,7 @@ public class SignUpUser extends AppCompatActivity {
             returnToLogin();
         }
     }
-    
+
     private void returnToLogin() {
         Toast.makeText(this, "New Account Made!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);

@@ -49,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
 		FirebaseApp.initializeApp(this);
 		mAuth = FirebaseAuth.getInstance();
 
+		//gets sharedprefs.
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
 		mPhoneNumber = prefs.getString("phone_number", "111111111");
 
@@ -113,7 +114,10 @@ public class LoginActivity extends AppCompatActivity {
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {
 
-							if (mPhoneNumber == "111111111") {
+							//if you sign in and no number has been linked to the DEVICE (not the acct bc the acct is useless atm)
+							//then mPhoneNumber is 1111111111 and we make an intent to go signup the user.
+							//otherwise, we call getFirebaseData()
+							if (mPhoneNumber.equals("111111111")) {
 							    Intent intent = new Intent(LoginActivity.this, SignUpUser.class);
 
                             } else {

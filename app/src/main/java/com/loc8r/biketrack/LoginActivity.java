@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -53,6 +54,12 @@ public class LoginActivity extends AppCompatActivity {
 
 		mSignInButton = (SignInButton) findViewById(R.id.login);
 		mSignInButton.setSize(SignInButton.SIZE_WIDE);
+		mSignInButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View view) {
+				loginWithGoogle();
+			}
+		});
 
 		//gets sharedprefs.
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
@@ -89,7 +96,8 @@ public class LoginActivity extends AppCompatActivity {
 
 	}
 
-	public void loginWithGoogle(View v) {
+	public void loginWithGoogle() {
+		Log.d("project", "Clicked!");
 		Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mgac);
 		startActivityForResult(signInIntent, 1);
 	}

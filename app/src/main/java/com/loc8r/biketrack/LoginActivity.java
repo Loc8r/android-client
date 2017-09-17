@@ -39,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 	GoogleApiClient mgac;
 	GoogleSignInAccount mgsa;
 	DatabaseReference mDatabaseReference;
+    String mPhoneNumber;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 		mAuth = FirebaseAuth.getInstance();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
-		String phoneNumber = prefs.getString("phone_number", "111111111");
+		mPhoneNumber = prefs.getString("phone_number", "111111111");
 
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
@@ -72,7 +73,7 @@ public class LoginActivity extends AppCompatActivity {
 		mDatabaseReference = FirebaseDatabase
 				.getInstance()
 				.getReference()
-				.child(phoneNumber);
+				.child(mPhoneNumber);
 
 		//if user is already logged in, then immediately call getFirebaseData
 		FirebaseUser user = mAuth.getCurrentUser();
@@ -111,7 +112,13 @@ public class LoginActivity extends AppCompatActivity {
 					@Override
 					public void onComplete(@NonNull Task<AuthResult> task) {
 						if (task.isSuccessful()) {
-							getFirebaseData(mDatabaseReference);
+
+							if (mPhoneNumber == "111111111") {
+							    Intent intent = new Intent(LoginActivity.this, SignUpUser.class);
+
+                            } else {
+							    getFirebaseData(mDatabaseReference);
+                            }
 
 						} else {
 							Toast.makeText(LoginActivity.this, "Sorry! Something went wrong! Try again!",

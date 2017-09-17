@@ -30,11 +30,24 @@ public class SignUpUser extends AppCompatActivity {
 
     public void registerUser (View v) {
         String phoneNumber = mPhoneNumber.getText().toString();
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        sharedPreferences.edit().putString("phone_number", phoneNumber).apply();
-        returnToLogin();
+
+        if (phoneNumber.length() != 10) {
+            Toast.makeText(this, "Improper number. Please write the number in format xxxxxxxxxx without spaces!", Toast.LENGTH_SHORT)
+                    .show();
+            mPhoneNumber.setText("");
+        } else {
+            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            sharedPreferences.edit().putString("phone_number", phoneNumber).apply();
+            updateToFirebase(phoneNumber);
+            returnToLogin();
+        }
+
+
     }
 
+    private void updateToFirebase (String phoneNumber) {
+        
+    }
 
     private void returnToLogin() {
         Toast.makeText(this, "New Account Made!", Toast.LENGTH_SHORT).show();

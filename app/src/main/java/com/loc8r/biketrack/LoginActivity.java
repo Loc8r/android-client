@@ -42,8 +42,7 @@ public class LoginActivity extends AppCompatActivity {
 	FirebaseAuth mAuth;
 	GoogleApiClient mgac;
 	GoogleSignInAccount mgsa;
-	DatabaseReference mDatabaseReference;
-    String mPhoneNumber;
+	String mPhoneNumber;
     SignInButton mSignInButton;
     EditText mPhoneEdit;
     Button mSubmitButton;
@@ -54,6 +53,7 @@ public class LoginActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_login);
 
 		prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);
+		mPhoneNumber = prefs.getString("phone_number", null);
 
 		FirebaseApp.initializeApp(this);
 		mAuth = FirebaseAuth.getInstance();
@@ -67,16 +67,15 @@ public class LoginActivity extends AppCompatActivity {
 		mSubmitButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				// TODO: 2017-09-17 SET NUMBER
+				mPhoneNumber = mPhoneEdit.getText().toString();
+				prefs.edit().putString("phone_number", mPhoneNumber).apply();
+				viewLastLocation();
 			}
 		});
 
 		//if user is already logged in, then immediately call getFirebaseData
 		FirebaseUser user = mAuth.getCurrentUser();
-		if (user == null) {
-			mPhoneEdit.setVisibility(View.VISIBLE);
-			mSignInButton.setVisibility(View.GONE);
-		} else {
+		if (user != null) {
 			viewLastLocation();
 		}
 
@@ -87,8 +86,6 @@ public class LoginActivity extends AppCompatActivity {
 			}
 		});
 
-		//gets sharedprefs.
-		mPhoneNumber = prefs.getString("phone_number", "111111111");
 
 		GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
 				.requestEmail()
@@ -107,23 +104,18 @@ public class LoginActivity extends AppCompatActivity {
 				.addApi(Auth.GOOGLE_SIGN_IN_API, gso)
 				.build();
 
-		//Database reference points to a specific user in list of users
-		mDatabaseReference = FirebaseDatabase
-				.getInstance()
-				.getReference()
-				.child(mPhoneNumber);
-
 	}
 
 	private void viewLastLocation() {
-		DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child(mPhoneNumber).child("locationHistory");
+		DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users").child(mPhoneNumber).child("locationHistory");
 		Query lastLocationQuery = ref.orderByKey().limitToLast(1);
 		lastLocationQuery.addListenerForSingleValueEvent(new ValueEventListener() {
 			@Override
 			public void onDataChange(DataSnapshot dataSnapshot) {
+				String key = dataSnapshot.getChildren().iterator().next().getKey();
 				LatLng latLng = new LatLng(
-						Double.parseDouble(dataSnapshot.child("lat").getValue().toString()),
-						Double.parseDouble(dataSnapshot.child("lon").getValue().toString()));
+						Double.parseDouble(dataSnapshot.child(key).child("lat").getValue().toString()),
+						Double.parseDouble(dataSnapshot.child(key).child("lon").getValue().toString()));
 				goToMaps(latLng);
 			}
 
@@ -166,13 +158,12 @@ public class LoginActivity extends AppCompatActivity {
 						if (task.isSuccessful()) {
 
 							//if you sign in and no number has been linked to the DEVICE (not the acct bc the acct is useless atm)
-							//then mPhoneNumber is 1111111111 and we make an intent to go signup the user.
+							//then mPhoneNumber is null and we make an intent to go signup the user.
 							//otherwise, we call getFirebaseData()
-							if (mPhoneNumber.equals("111111111")) {
-							    Intent intent = new Intent(LoginActivity.this, SignUpUser.class);
-
-                            } else {
-							    getFirebaseData(mDatabaseReference);
+							if (mPhoneNumber == null) {
+								mSignInButton.setVisibility(View.GONE);
+								mPhoneEdit.setVisibility(View.VISIBLE);
+								mSubmitButton.setVisibility(View.VISIBLE);
                             }
 
 						} else {
@@ -182,27 +173,6 @@ public class LoginActivity extends AppCompatActivity {
 
 					}
 				});
-	}
-
-
-	private void getFirebaseData(DatabaseReference ref) {
-		ref.addValueEventListener(new ValueEventListener() {
-			@Override
-			public void onDataChange(DataSnapshot dataSnapshot) {
-
-
-				//TODO work with the snapshot (hashmap) and get last location
-				//TODO call goToMaps
-
-
-
-			}
-
-			@Override
-			public void onCancelled(DatabaseError databaseError) {
-
-			}
-		});
 	}
 
 	private void goToMaps(LatLng location) {

@@ -14,6 +14,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 	GoogleSignInAccount mgsa;
 	DatabaseReference mDatabaseReference;
     String mPhoneNumber;
+    SignInButton mSignInButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
 
 		FirebaseApp.initializeApp(this);
 		mAuth = FirebaseAuth.getInstance();
+
+		mSignInButton = (SignInButton) findViewById(R.id.login);
+		mSignInButton.setSize(SignInButton.SIZE_WIDE);
 
 		//gets sharedprefs.
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this);

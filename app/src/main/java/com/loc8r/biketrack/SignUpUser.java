@@ -23,6 +23,7 @@ public class SignUpUser extends AppCompatActivity {
         setContentView(R.layout.activity_sign_up_user);
 
         mPhoneNumber = (EditText) findViewById(R.id.phoneNumber);
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
     }
 
     public void registerUser (View v) {
@@ -47,9 +48,8 @@ public class SignUpUser extends AppCompatActivity {
     }
 
     private void updateToFirebase(User user) {
-        //TODO make this consistent with the rest of the LoginActivity Code. userlist is an arraylist of users.
-        mDatabaseReference.child("userlist")
-                .push()
+        //TODO make this consistent with the rest of the LoginActivity Code. users is document store.
+        mDatabaseReference.child("users").child(String.valueOf(mPhoneNumber))
                 .setValue(user);
         returnToLogin();
     }

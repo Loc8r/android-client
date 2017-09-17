@@ -38,19 +38,10 @@ public class SignUpUser extends AppCompatActivity {
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
             sharedPreferences.edit().putString("phone_number", phoneNumber).apply();
-            updateToFirebase(phoneNumber);
             returnToLogin();
         }
-
-
     }
-
-    private void updateToFirebase (String phoneNumber) {
-        FirebaseDatabase.getInstance().getReference().child("users")
-                .push()
-                .setValue(phoneNumber);
-    }
-
+    
     private void returnToLogin() {
         Toast.makeText(this, "New Account Made!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(this, LoginActivity.class);
